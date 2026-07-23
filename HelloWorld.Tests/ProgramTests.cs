@@ -3,8 +3,8 @@ using Xunit;
 public class ProgramTests
 {
     [Fact]
-    public void GetGreeting_ReturnsHelloWorld()
+    public void GetGreeting_ReturnsWelcomeMessage()
     {
-        Assert.Equal("Hello, World!", Program.GetGreeting());
+        Assert.Equal("Welcome to EFD C# project!", Program.GetGreeting());
     }
 }
