@@ -1,0 +1,45 @@
+name: Build efd-dotnet
+on:
+  push:
+    branches:
+      - main
+      - master
+      - dev1
+    paths:
+      - .github/workflows/**
+      - "**"
+  pull_request:
+    branches:
+      - main
+      - master
+      - dev1
+    paths:
+      - .github/workflows/**
+      - "**"
+  workflow_dispatch:
+env:
+  ARTIFACT_ID: efd-dotnet
+  VERSION: 1.0.0
+  GROUP_ID: com.example
+jobs:
+  build:
+    name: .NET Build
+    if: "vars.ACTIVE_CLOUD == 'aws'"
+    "runs-on": self-hosted
+    env:
+      AWS_REGION: us-east-1
+      AWS_DEFAULT_REGION: us-east-1
+    steps:
+      - uses: actions/checkout@v4
+      - name: Log in to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+      - name: Build and push Docker image
+        env:
+          ECR_REGISTRY: "${{ steps.login-ecr.outputs.registry }}"
+          ECR_REPOSITORY: efd-dotnet
+          IMAGE_TAG: "${{ github.sha }}"
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
