@@ -7,4 +7,4 @@ FROM mcr.microsoft.com/dotnet/aspnet:8.0
 WORKDIR /app
 COPY --from=build /app/publish .
 EXPOSE 8080
-ENTRYPOINT ["/bin/sh", "-c", "exec dotnet \"$(basename \"$(ls *.runtimeconfig.json | head -n1)\" .runtimeconfig.json).dll\""]
+ENTRYPOINT ["dotnet", "HelloWorld.dll"]
